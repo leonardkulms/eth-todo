@@ -22,7 +22,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.loadBlockchainData()
+    this.loadBlockchainData();
   }
 
   async loadBlockchainData() {
@@ -43,33 +43,32 @@ class App extends React.Component {
   }
 
   createTask(content) {
-    this.setState({ loading: true })
+    this.setState({ loading: true });
     this.state.todoList.methods.createTask(content).send({ from: this.state.account })
-    .once('receipt', (receipt) => {
-      this.setState({ loading: false })
-    })
+      .once('receipt', (receipt) => {
+        this.loadBlockchainData();
+      });
   }
 
   toggleCompleted(taskId) {
-    this.setState({ loading: true })
+    this.setState({ loading: true });
     this.state.todoList.methods.toggleCompleted(taskId).send({ from: this.state.account })
-    .once('receipt', (receipt) => {
-      this.setState({ loading: false })
-    })
+      .once('receipt', (receipt) => {
+        this.setState({ loading: false });
+      });
   }
 
   render() {
     // todo: -> components: navbar, ul list, add item
-    return(
+    return (
       <div className="App">
         <nav className="app--navbar" >
           <div className="app--navbar-logo">
             ETH-Todo
           </div>
           <ul className="app--navbar-list" >
-            <p> { this.state.account } </p>
+            <p> {this.state.account} </p>
           </ul>
-
         </nav>
         {this.state.loading
           ? <Loading />
