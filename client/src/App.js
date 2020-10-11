@@ -1,6 +1,7 @@
 import React from 'react';
 import Web3 from 'web3'
 import './App.scss';
+import TodoList from './components/TodoList/TodoList';
 
 import { TODO_LIST_ABI, TODO_LIST_ADDRESS } from './todoList-config';
 
@@ -68,18 +69,10 @@ class App extends React.Component {
           </ul>
 
         </nav>
-  
-        <ul className="todo--list">
-            { this.state.tasks.map((task, key) => {
-              return(
-                <div className="todo--item" key={key}>
-                  <label className="todo--label">Input</label>
-                    <input type="checkbox" />
-                    <span className="todo--text">{task.description}</span>
-                </div>
-              )
-            })}
-          </ul>
+        {this.state.loading
+          ? <Loading />
+          : <TodoList tasks={this.state.tasks} addTask={this.createTask} />
+        }
       </div>
     );
   }
