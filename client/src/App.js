@@ -4,7 +4,8 @@ import TodoForm from './components/TodoForm/TodoForm';
 import TodoList from './components/TodoList/TodoList';
 import Loading from './components/Loading/Loading';
 import Nav from './components/Nav/Nav';
-import avocado from './avocado.svg';
+import './App.scss';
+
 
 import { TODO_LIST_ABI, TODO_LIST_ADDRESS } from './todoList-config';
 
@@ -73,9 +74,9 @@ class App extends React.Component {
           ? <Loading />
           : <TodoList
             tasks={this.state.tasks}
-            addTask={this.createTask}
             toggleCompleted={this.toggleCompleted} />
         }
+
       </div>
     );
   }
