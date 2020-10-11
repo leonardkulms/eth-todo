@@ -8,7 +8,7 @@ function TodoForm(props) {
     <form className="todo--form"
       onSubmit={(event) => {
         event.preventDefault();
-        props.addTask(newTodo)
+        props.addTask(newTodo);
       }}>
       <input type="text" className="todo--input" placeholder="Add task and Enter" onChange={e => setNewTodo(e.target.value)} required />
     </form>

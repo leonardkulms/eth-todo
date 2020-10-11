@@ -9,23 +9,3 @@
   flex-direction: column-reverse;
   align-items: center;
 }
-
-.todo--item {
-  width: 325px;
-  height: 100px;
-  display: grid;
-  place-items: center;
-  grid-template-columns: 1px 50px auto ;
-  border-radius: 5px;
-  border: 1px solid #9b9b9b7a;
-  box-shadow: 0 3px 3px #9b9b9b7a;
-  margin-bottom: 5px;
-}
-
-.todo--text {
-
-}
-
-.todo--label {
-  visibility: hidden;
-}

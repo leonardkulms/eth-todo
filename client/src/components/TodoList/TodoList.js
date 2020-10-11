@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import TodoItem from '../TodoItem/TodoItem';
 import './TodoList.scss';
 
 function TodoList(props) {
@@ -8,18 +9,11 @@ function TodoList(props) {
       <ul className="todo--list">
         {props.tasks.map((task, key) => {
           return (
-            <div className="todo--item" key={key}>
-              <label className="todo--label">Input</label>
-              <input
-                type="checkbox"
-                name={task.id}
-                defaultChecked={task.completed}
-                onClick={(event) => {
-                  props.toggleCompleted(event.target.name)
-                }} />
-
-              <span className="todo--text">{task.description}</span>
-            </div>
+            <TodoItem
+              task={task}
+              key={key}
+              toggleCompleted={props.toggleCompleted}
+            />
           )
         })}
       </ul>
