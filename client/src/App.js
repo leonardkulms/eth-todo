@@ -19,8 +19,8 @@ class App extends React.Component {
       loading: true
     }
 
-    this.createTask = this.createTask.bind(this)
-    this.toggleCompleted = this.toggleCompleted.bind(this)
+    this.createTask = this.createTask.bind(this);
+    this.toggleCompleted = this.toggleCompleted.bind(this);
   }
 
   componentDidMount() {
@@ -28,20 +28,21 @@ class App extends React.Component {
   }
 
   async loadBlockchainData() {
-    const web3 = new Web3(Web3.givenProvider || "http://localhost:7545")
-    const accounts = await web3.eth.getAccounts()
-    this.setState({ account: accounts[0] })
-    const todoList = new web3.eth.Contract(TODO_LIST_ABI, TODO_LIST_ADDRESS)
-    this.setState({ todoList })
-    const taskCount = await todoList.methods.taskCount().call()
-    this.setState({ taskCount })
-    for (var i = 1; i <= taskCount; i++) {
-      const task = await todoList.methods.tasks(i).call()
+    const web3 = new Web3(Web3.givenProvider || "http://localhost:7545");
+    const accounts = await web3.eth.getAccounts();
+    this.setState({ account: accounts[0] });
+    const todoList = new web3.eth.Contract(TODO_LIST_ABI, TODO_LIST_ADDRESS);
+    this.setState({ todoList });
+    const taskCount = await todoList.methods.taskCount().call();
+    this.setState({ taskCount });
+    this.setState({ tasks: [] });
+    for (let i = 1; i <= taskCount; i++) {
+      const task = await todoList.methods.tasks(i).call();
       this.setState({
         tasks: [...this.state.tasks, task]
-      })
+      });
     }
-    this.setState({ loading: false })
+    this.setState({ loading: false });
   }
 
   createTask(content) {
@@ -49,6 +50,7 @@ class App extends React.Component {
     this.state.todoList.methods.createTask(content).send({ from: this.state.account })
       .once('receipt', (receipt) => {
         this.loadBlockchainData();
+        console.log(this.state.tasks.length)
       });
   }
 

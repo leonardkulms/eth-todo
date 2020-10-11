@@ -3,7 +3,6 @@ import TodoItem from '../TodoItem/TodoItem';
 import './TodoList.scss';
 
 function TodoList(props) {
-
   return (
     <div className="todo">
       <ul className="todo--list">
@@ -14,11 +13,11 @@ function TodoList(props) {
               key={key}
               toggleCompleted={props.toggleCompleted}
             />
-          )
+          );
         })}
       </ul>
     </div>
-  )
+  );
 }
 
 export default TodoList;
