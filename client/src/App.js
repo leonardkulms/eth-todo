@@ -1,30 +1,89 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Web3 from 'web3'
-import logo from './logo.svg';
-import './App.css';
+import './App.scss';
 
 import { TODO_LIST_ABI, TODO_LIST_ADDRESS } from './todoList-config';
 
-function App() {
-  const [ accounts, setAccounts ] = useState([]);
-  useEffect( () => loadBlockchainData(), []);
-  
-  const loadBlockchainData = async () => {
-    const web3 = new Web3(Web3.givenProvider || "http://localhost:7545");
-    const accs = await web3.eth.getAccounts();
-    setAccounts(accs);
+class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      account: '',
+      taskCount: 0,
+      tasks: [],
+      loading: true
+    }
+
+    this.createTask = this.createTask.bind(this)
+    this.toggleCompleted = this.toggleCompleted.bind(this)
   }
 
+  componentDidMount() {
+    this.loadBlockchainData()
+  }
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <ul>
-          { accounts.map( a => <li> {a} </li> ) } 
-        </ul>
-      </header>
-    </div>
-  );
+  async loadBlockchainData() {
+    const web3 = new Web3(Web3.givenProvider || "http://localhost:7545")
+    const accounts = await web3.eth.getAccounts()
+    this.setState({ account: accounts[0] })
+    const todoList = new web3.eth.Contract(TODO_LIST_ABI, TODO_LIST_ADDRESS)
+    this.setState({ todoList })
+    const taskCount = await todoList.methods.taskCount().call()
+    this.setState({ taskCount })
+    for (var i = 1; i <= taskCount; i++) {
+      const task = await todoList.methods.tasks(i).call()
+      this.setState({
+        tasks: [...this.state.tasks, task]
+      })
+    }
+    this.setState({ loading: false })
+  }
+
+  createTask(content) {
+    this.setState({ loading: true })
+    this.state.todoList.methods.createTask(content).send({ from: this.state.account })
+    .once('receipt', (receipt) => {
+      this.setState({ loading: false })
+    })
+  }
+
+  toggleCompleted(taskId) {
+    this.setState({ loading: true })
+    this.state.todoList.methods.toggleCompleted(taskId).send({ from: this.state.account })
+    .once('receipt', (receipt) => {
+      this.setState({ loading: false })
+    })
+  }
+
+  render() {
+    // todo: -> components: navbar, ul list, add item
+    return(
+      <div className="App">
+        <nav className="app--navbar" >
+          <div className="app--navbar-logo">
+            ETH-Todo
+          </div>
+          <ul className="app--navbar-list" >
+            <p> { this.state.account } </p>
+          </ul>
+
+        </nav>
+  
+        <ul className="todo--list">
+            { this.state.tasks.map((task, key) => {
+              return(
+                <div className="todo--item" key={key}>
+                  <label className="todo--label">Input</label>
+                    <input type="checkbox" />
+                    <span className="todo--text">{task.description}</span>
+                </div>
+              )
+            })}
+          </ul>
+      </div>
+    );
+  }
 }
+
 
 export default App;
