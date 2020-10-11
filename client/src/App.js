@@ -1,6 +1,6 @@
 import React from 'react';
 import Web3 from 'web3'
-import './App.scss';
+import TodoForm from './components/TodoForm/TodoForm';
 import TodoList from './components/TodoList/TodoList';
 import Loading from './components/Loading/Loading';
 import Nav from './components/Nav/Nav';
@@ -62,7 +62,13 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
+
         <Nav account={this.state.account} />
+
+        <TodoForm
+          addTask={this.createTask}
+        />
+
         {this.state.loading
           ? <Loading />
           : <TodoList
