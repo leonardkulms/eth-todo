@@ -2,6 +2,8 @@ import React from 'react';
 import Web3 from 'web3'
 import './App.scss';
 import TodoList from './components/TodoList/TodoList';
+import Loading from './components/Loading/Loading';
+import avocado from './avocado.svg';
 
 import { TODO_LIST_ABI, TODO_LIST_ADDRESS } from './todoList-config';
 
