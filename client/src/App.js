@@ -55,7 +55,7 @@ class App extends React.Component {
     this.setState({ loading: true });
     this.state.todoList.methods.toggleCompleted(taskId).send({ from: this.state.account })
       .once('receipt', (receipt) => {
-        this.setState({ loading: false });
+        this.loadBlockchainData();
       });
   }
 
@@ -65,7 +65,10 @@ class App extends React.Component {
         <Nav account={this.state.account} />
         {this.state.loading
           ? <Loading />
-          : <TodoList tasks={this.state.tasks} addTask={this.createTask} />
+          : <TodoList
+            tasks={this.state.tasks}
+            addTask={this.createTask}
+            toggleCompleted={this.toggleCompleted} />
         }
       </div>
     );

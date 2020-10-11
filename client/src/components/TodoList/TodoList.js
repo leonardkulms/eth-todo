@@ -19,7 +19,14 @@ function TodoList(props) {
           return (
             <div className="todo--item" key={key}>
               <label className="todo--label">Input</label>
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                name={task.id}
+                defaultChecked={task.completed}
+                onClick={(event) => {
+                  props.toggleCompleted(event.target.name)
+                }} />
+
               <span className="todo--text">{task.description}</span>
             </div>
           )
