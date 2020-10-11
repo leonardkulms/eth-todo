@@ -3,22 +3,3 @@
 .App {
   text-align: center;
 }
-
-.app--navbar {
-  @include container;
-  background-color: #F87060;
-  color: #fff;
-  height: 100px;
-  display: grid;
-  place-items: center;
-  grid-template-columns: 300px 300px auto;
-}
-
-.app--navbar-logo {
- font-size: 26px;
- line-height: 26px;
-}
-
-.app--navbar-list {
-  list-style: none;
-}

@@ -3,6 +3,7 @@ import Web3 from 'web3'
 import './App.scss';
 import TodoList from './components/TodoList/TodoList';
 import Loading from './components/Loading/Loading';
+import Nav from './components/Nav/Nav';
 import avocado from './avocado.svg';
 
 import { TODO_LIST_ABI, TODO_LIST_ADDRESS } from './todoList-config';
@@ -59,17 +60,9 @@ class App extends React.Component {
   }
 
   render() {
-    // todo: -> components: navbar, ul list, add item
     return (
       <div className="App">
-        <nav className="app--navbar" >
-          <div className="app--navbar-logo">
-            ETH-Todo
-          </div>
-          <ul className="app--navbar-list" >
-            <p> {this.state.account} </p>
-          </ul>
-        </nav>
+        <Nav account={this.state.account} />
         {this.state.loading
           ? <Loading />
           : <TodoList tasks={this.state.tasks} addTask={this.createTask} />
@@ -78,6 +71,5 @@ class App extends React.Component {
     );
   }
 }
-
 
 export default App;
