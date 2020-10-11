@@ -8,9 +8,9 @@ function Loading() {
       <img
         src={avocado}
         className="loading--spin"
-        alt="logo"
+        alt="loading avocado"
       />
-      <p>Loading...</p></div>
+    </div>
   )
 }
 
