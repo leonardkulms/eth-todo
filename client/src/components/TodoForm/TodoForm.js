@@ -10,7 +10,7 @@ function TodoForm(props) {
         event.preventDefault();
         props.addTask(newTodo);
       }}>
-      <input autofocus="true" type="text" className="todo--input" placeholder="Add task and Enter" onChange={e => setNewTodo(e.target.value)} required />
+      <input autoFocus={true} type="text" className="todo--input" placeholder="What to do?" onChange={e => setNewTodo(e.target.value)} required />
     </form>
   )
 }
