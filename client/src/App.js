@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Web3 from 'web3'
 import TodoForm from './components/TodoForm/TodoForm';
 import TodoList from './components/TodoList/TodoList';
@@ -9,77 +9,76 @@ import './App.scss';
 
 import { TODO_LIST_ABI, TODO_LIST_ADDRESS } from './todoList-config';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      account: '',
-      taskCount: 0,
-      tasks: [],
-      loading: true
+function App() {
+  const [ account, setAccount ] =     useState('');
+  const [ taskCount, setTaskCount ] = useState(0);
+  const [ tasks, setTasks ] =         useState([]);
+  const [ loading, setLoading ] =     useState(false);
+  const [ todoList, setTodoList ] =   useState();
+
+
+  useEffect( () => {
+    async function loadBlockchainData() {
+      const web3 = new Web3(Web3.givenProvider || "http://localhost:7545");
+      const accounts = await web3.eth.getAccounts();
+      setAccount(accounts[0]);
+      const todoList = new web3.eth.Contract(TODO_LIST_ABI, TODO_LIST_ADDRESS);
+      setTodoList(todoList);
+      const taskCount = await todoList.methods.taskCount().call();
+      setTaskCount(taskCount);
+      for (let i = 1; i <= taskCount; i++) {
+        let task = await todoList.methods.tasks(i).call()
+        setTasks(tasks => [...tasks, task]);
+      }
     }
+    loadBlockchainData();
 
-    this.createTask = this.createTask.bind(this);
-    this.toggleCompleted = this.toggleCompleted.bind(this);
-  }
+  }, []);
 
-  componentDidMount() {
-    this.loadBlockchainData();
-  }
-
-  async loadBlockchainData() {
-    const web3 = new Web3(Web3.givenProvider || "http://localhost:7545");
-    const accounts = await web3.eth.getAccounts();
-    this.setState({ account: accounts[0] });
-    const todoList = new web3.eth.Contract(TODO_LIST_ABI, TODO_LIST_ADDRESS);
-    this.setState({ todoList });
+  async function updateTasks() {
     const taskCount = await todoList.methods.taskCount().call();
-    this.setState({ taskCount });
-    this.setState({ tasks: [] });
+    setTasks([]);
     for (let i = 1; i <= taskCount; i++) {
-      const task = await todoList.methods.tasks(i).call();
-      this.setState({
-        tasks: [...this.state.tasks, task]
-      });
+      let task = await todoList.methods.tasks(i).call()
+      setTasks(tasks => [...tasks, task]);
     }
-    this.setState({ loading: false });
+    setLoading(false);
   }
 
-  createTask(content) {
-    this.setState({ loading: true });
-    this.state.todoList.methods.createTask(content).send({ from: this.state.account })
+  async function createTask(content) {
+    setLoading(true);
+    await todoList.methods.createTask(content).send({ from: account })
       .once('receipt', (receipt) => {
-        this.loadBlockchainData();
-        console.log(this.state.tasks.length)
+        updateTasks();
       });
   }
 
-  toggleCompleted(taskId) {
-    this.setState({ loading: true });
-    this.state.todoList.methods.toggleCompleted(taskId).send({ from: this.state.account })
+  async function toggleCompleted(taskId) {
+    setLoading(true);
+    console.log(todoList.methods)
+    await todoList.methods.toggleCompleted(taskId).send({ from: account })
       .once('receipt', (receipt) => {
-        this.loadBlockchainData();
+        updateTasks();
       });
   }
 
-  render() {
-    return (
-      <div className="App">
+  return (
+    <div className="App">
 
-        <Nav account={this.state.account} />
+      <Nav account={account} />
 
-        <TodoForm addTask={this.createTask}/>
+      <TodoForm addTask={ createTask }/>
 
-        {this.state.loading
-          ? <Loading />
-          : <TodoList
-              tasks={this.state.tasks}
-              toggleCompleted={this.toggleCompleted} />
-        }
+      {loading
+        ? <Loading />
+        : <TodoList
+            taskCount={ taskCount }
+            tasks={ tasks }
+            toggleCompleted={ toggleCompleted } />
+      }
 
-      </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default App;
