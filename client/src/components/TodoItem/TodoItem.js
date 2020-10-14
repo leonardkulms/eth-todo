@@ -5,7 +5,7 @@ function TodoItem(props) {
   return (
     <div
       className={`todo--item ${props.task.completed ? "is-completed" : ""}`}
-      key={props.key}>
+      key={props.task.id}>
       <label className="todo--label">Input</label>
       <input
         type="checkbox"
