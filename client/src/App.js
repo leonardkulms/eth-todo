@@ -68,15 +68,13 @@ class App extends React.Component {
 
         <Nav account={this.state.account} />
 
-        <TodoForm
-          addTask={this.createTask}
-        />
+        <TodoForm addTask={this.createTask}/>
 
         {this.state.loading
           ? <Loading />
           : <TodoList
-            tasks={this.state.tasks}
-            toggleCompleted={this.toggleCompleted} />
+              tasks={this.state.tasks}
+              toggleCompleted={this.toggleCompleted} />
         }
 
       </div>
