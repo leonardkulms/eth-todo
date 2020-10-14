@@ -6,11 +6,11 @@ function TodoList(props) {
   return (
     <div className="todo">
       <ul className="todo--list">
-        {props.tasks.map((task, key) => {
+        {props.tasks.map((task) => {
           return (
             <TodoItem
               task={task}
-              key={key}
+              key={task.id}
               toggleCompleted={props.toggleCompleted}
             />
           );
